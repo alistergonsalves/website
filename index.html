@@ -1,0 +1,166 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alister Tyre Service</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('landscape.jpg'); /* Replace with your landscape image file */
+            background-size: cover;
+            background-attachment: fixed;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+        }
+        header h1 {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 0;
+        }
+        nav {
+            background: #333;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 18px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+        }
+        .tyre-gallery {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .tyre-gallery img {
+            width: 200px;
+            height: 200px;
+            margin: 10px;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+        .social-media {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .social-media a {
+            margin: 0 10px;
+            text-decoration: none;
+        }
+        .social-media img {
+            width: 40px;
+            height: 40px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background: #333;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Apollo, Ceat, Bridgestone, Firestone</h1>
+    </header>
+    <nav>
+        <a href="#contact">Contact Us</a>
+        <a href="#location">Location</a>
+    </nav>
+    <div class="content">
+        <h2>Welcome to Alister Tyre Service</h2>
+        <p>Alister Tyre Service is your one-stop shop for premium tyres in the heart of the city. We specialize in offering top-quality tyres from leading brands like Apollo, Ceat, Bridgestone, and Firestone. With years of expertise, our dedicated team ensures you get the perfect tyres for your vehicle, whether it's for daily commutes, long road trips, or heavy-duty performance. We pride ourselves on exceptional customer service, competitive pricing, and expert advice to keep you safe on the road.</p>
+        <h3>Our Tyre Collection</h3>
+        <div class="tyre-gallery">
+            <img src="images/apollo-tyre.jpg" alt="Apollo Tyre"> <!-- Replace with your Apollo tyre image -->
+            <img src="images/ceat-tyre.jpg" alt="Ceat Tyre"> <!-- Replace with your Ceat tyre image -->
+            <img src="images/bridgestone-tyre.jpg" alt="Bridgestone Tyre"> <!-- Replace with your Bridgestone tyre image -->
+            <img src="images/firestone-tyre.jpg" alt="Firestone Tyre"> <!-- Replace with your Firestone tyre image -->
+        </div>
+        <h3 id="contact">Contact Us</h3>
+        <p>Mobile No: +91 8975980797</p>
+        <h3 id="location">Location</h3>
+        <!-- Embed your Google Maps iframe code here -->
+        <p><div class="mapouter"><div class="gmap_canvas"><iframe class="gmap_iframe" width="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=Alister Tyre Service&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe><a href="https://embed-googlemap.com">embed google maps in website</a></div><style>.mapouter{position:relative;text-align:right;width:100%;height:400px;}.gmap_canvas {overflow:hidden;background:none!important;width:100%;height:400px;}.gmap_iframe {height:400px!important;}</style></div></p>
+        <div class="social-media">
+            <h3>Follow Us</h3>
+            <a href="https://www.instagram.com/alistertyreservice" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram">
+            </a>
+            <a href="https://www.facebook.com" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook">
+            </a>
+            <a href="https://wa.me/+918975980797" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+            </a>
+            <a href="https://alistergonsalves.github.io/feedback/" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Google_Reviews_Logo.svg" alt="Google Reviews">
+            </a>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2025 Alister Tyre Service</p>
+    </footer>
+</body>
+</html>
